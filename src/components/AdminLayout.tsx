@@ -1,7 +1,7 @@
 import { ReactNode, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
-  LayoutDashboard, FileText, Award, Store, Building2, CreditCard, BarChart3, MessageSquare, Settings, LogOut, Menu, X, Users
+  LayoutDashboard, FileText, Award, Store, Building2, CreditCard, BarChart3, MessageSquare, Settings, LogOut, Menu, X, Users, Map, Home, Bell, Shield
 } from "lucide-react";
 import emblem from "@/assets/logmas-emblem.png";
 
@@ -9,12 +9,15 @@ const adminNav = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/admin" },
   { icon: FileText, label: "Applications", path: "/admin/applications" },
   { icon: Award, label: "Certificates", path: "/admin/certificates" },
+  { icon: Map, label: "Street Applications", path: "/admin/streets" },
+  { icon: Home, label: "Tenement Rate", path: "/admin/tenement" },
   { icon: Store, label: "Shops", path: "/admin/shops" },
   { icon: Building2, label: "Businesses", path: "/admin/businesses" },
   { icon: CreditCard, label: "Payments", path: "/admin/payments" },
   { icon: BarChart3, label: "Reports", path: "/admin/reports" },
   { icon: MessageSquare, label: "Tickets", path: "/admin/tickets" },
-  { icon: Users, label: "Users", path: "/admin/users" },
+  { icon: Users, label: "Officers", path: "/admin/officers" },
+  { icon: Shield, label: "Users", path: "/admin/users" },
   { icon: Settings, label: "Settings", path: "/admin/settings" },
 ];
 
@@ -54,7 +57,7 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
                     : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
                 }`}
               >
-                <item.icon className="h-5 w-5" />
+                <item.icon className="h-4 w-4" />
                 {item.label}
               </Link>
             );
@@ -62,11 +65,8 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
         </nav>
 
         <div className="p-3 border-t border-sidebar-border">
-          <Link
-            to="/"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors"
-          >
-            <LogOut className="h-5 w-5" />
+          <Link to="/" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors">
+            <LogOut className="h-4 w-4" />
             Logout
           </Link>
         </div>
@@ -78,6 +78,12 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
             <Menu className="h-6 w-6" />
           </button>
           <h1 className="font-display font-semibold text-lg text-foreground">Admin Portal</h1>
+          <div className="ml-auto flex items-center gap-3">
+            <Link to="/admin/tickets" className="relative text-muted-foreground hover:text-foreground">
+              <Bell className="h-5 w-5" />
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-destructive text-destructive-foreground rounded-full text-[10px] flex items-center justify-center font-bold">5</span>
+            </Link>
+          </div>
         </header>
         <main className="flex-1 p-4 lg:p-6">{children}</main>
       </div>
