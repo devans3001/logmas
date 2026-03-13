@@ -1,37 +1,32 @@
 import AdminLayout from "@/components/AdminLayout";
-import { FileText, Store, Building2, CreditCard, TrendingUp, Users, ArrowUpRight, Clock } from "lucide-react";
+import { FileText, Store, Building2, CreditCard, ArrowUpRight, Clock, Map, Home, Users } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
 const stats = [
-  { icon: CreditCard, label: "Total Revenue", value: "₦12.5M", change: "+12%", color: "text-primary", bg: "bg-primary/10" },
-  { icon: FileText, label: "Applications", value: "1,234", change: "+8%", color: "text-info", bg: "bg-info/10" },
-  { icon: Store, label: "Registered Shops", value: "856", change: "+5%", color: "text-accent", bg: "bg-accent/10" },
-  { icon: Building2, label: "Businesses", value: "342", change: "+3%", color: "text-success", bg: "bg-success/10" },
+  { icon: CreditCard, label: "Total Revenue", value: "₦18.5M", change: "+15%", color: "text-primary", bg: "bg-primary/10" },
+  { icon: FileText, label: "Applications", value: "2,456", change: "+12%", color: "text-info", bg: "bg-info/10" },
+  { icon: Map, label: "Street Registrations", value: "523", change: "+8%", color: "text-accent", bg: "bg-accent/10" },
+  { icon: Home, label: "Tenement Payments", value: "1,245", change: "+6%", color: "text-success", bg: "bg-success/10" },
+  { icon: Store, label: "Registered Shops", value: "2,156", change: "+5%", color: "text-primary", bg: "bg-primary/10" },
+  { icon: Building2, label: "Businesses", value: "842", change: "+3%", color: "text-info", bg: "bg-info/10" },
 ];
 
 const revenueData = [
-  { month: "Sep", revenue: 2400000 },
-  { month: "Oct", revenue: 3200000 },
-  { month: "Nov", revenue: 2800000 },
-  { month: "Dec", revenue: 4100000 },
-  { month: "Jan", revenue: 3600000 },
-  { month: "Feb", revenue: 4800000 },
+  { month: "Sep", revenue: 2400000 }, { month: "Oct", revenue: 3200000 }, { month: "Nov", revenue: 2800000 },
+  { month: "Dec", revenue: 4100000 }, { month: "Jan", revenue: 3600000 }, { month: "Feb", revenue: 4800000 },
 ];
 
 const certData = [
-  { name: "Birth", value: 45 },
-  { name: "Marriage", value: 25 },
-  { name: "Death", value: 15 },
-  { name: "Origin", value: 15 },
+  { name: "Birth", value: 35 }, { name: "Marriage", value: 20 }, { name: "Street", value: 25 }, { name: "Tenement", value: 20 },
 ];
 
 const PIE_COLORS = ["hsl(150,82%,23%)", "hsl(43,66%,52%)", "hsl(210,80%,52%)", "hsl(145,63%,42%)"];
 
 const recentActivity = [
-  { action: "New application submitted", user: "Adeola Bakare", time: "5 min ago", type: "application" },
-  { action: "Payment received", user: "Tunde Ogundimu", time: "12 min ago", type: "payment" },
+  { action: "Street registration submitted", user: "Adeola Bakare", time: "5 min ago", type: "application" },
+  { action: "Tenement rate payment", user: "Tunde Ogundimu", time: "12 min ago", type: "payment" },
   { action: "Certificate approved", user: "Folake Adeyemi", time: "1 hour ago", type: "certificate" },
-  { action: "Shop levy paid", user: "Ibrahim Salisu", time: "2 hours ago", type: "payment" },
+  { action: "Demand notice paid", user: "Ibrahim Salisu", time: "2 hours ago", type: "payment" },
   { action: "New business registered", user: "Grace Obi", time: "3 hours ago", type: "business" },
 ];
 
@@ -41,11 +36,10 @@ const AdminDashboard = () => {
       <div className="space-y-6">
         <div>
           <h2 className="font-display text-2xl font-bold text-foreground">Admin Dashboard</h2>
-          <p className="text-muted-foreground">Overview of the local government system.</p>
+          <p className="text-muted-foreground">Ifo Local Government — System Overview</p>
         </div>
 
-        {/* Stats */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {stats.map((stat) => (
             <div key={stat.label} className="bg-card rounded-xl p-5 shadow-card border border-border hover:shadow-elevated transition-shadow">
               <div className="flex items-center justify-between mb-3">
@@ -62,7 +56,6 @@ const AdminDashboard = () => {
           ))}
         </div>
 
-        {/* Charts */}
         <div className="grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 bg-card rounded-xl p-6 shadow-card border border-border">
             <h3 className="font-display font-semibold text-foreground mb-4">Revenue Overview</h3>
@@ -78,13 +71,11 @@ const AdminDashboard = () => {
           </div>
 
           <div className="bg-card rounded-xl p-6 shadow-card border border-border">
-            <h3 className="font-display font-semibold text-foreground mb-4">Certificates Breakdown</h3>
+            <h3 className="font-display font-semibold text-foreground mb-4">Service Breakdown</h3>
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie data={certData} dataKey="value" cx="50%" cy="50%" outerRadius={80} innerRadius={50}>
-                  {certData.map((_, i) => (
-                    <Cell key={i} fill={PIE_COLORS[i]} />
-                  ))}
+                  {certData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i]} />)}
                 </Pie>
                 <Tooltip />
               </PieChart>
@@ -100,7 +91,6 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Recent Activity */}
         <div className="bg-card rounded-xl p-6 shadow-card border border-border">
           <h3 className="font-display font-semibold text-foreground mb-4">Recent Activity</h3>
           <div className="space-y-3">
@@ -108,9 +98,7 @@ const AdminDashboard = () => {
               <div key={i} className="flex items-center justify-between py-3 border-b border-border last:border-0">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                    {item.type === "payment" ? <CreditCard className="h-4 w-4" /> :
-                     item.type === "business" ? <Building2 className="h-4 w-4" /> :
-                     <FileText className="h-4 w-4" />}
+                    {item.type === "payment" ? <CreditCard className="h-4 w-4" /> : item.type === "business" ? <Building2 className="h-4 w-4" /> : <FileText className="h-4 w-4" />}
                   </div>
                   <div>
                     <div className="text-sm font-medium text-foreground">{item.action}</div>
