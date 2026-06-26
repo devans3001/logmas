@@ -36,8 +36,8 @@ const StreetCertificate = () => {
   return (
     <DashboardLayout>
       <div className="max-w-2xl mx-auto space-y-4">
-        {/* Actions */}
-        <div className="flex items-center justify-between">
+        {/* Actions - hidden when printing */}
+        <div className="flex items-center justify-between print:hidden">
           <div>
             <h2 className="font-display text-xl font-bold text-foreground">
               Street Registration Certificate
@@ -59,8 +59,9 @@ const StreetCertificate = () => {
         {/* Certificate */}
         <div
           id="certificate"
-          className="bg-white border-4 border-double border-green-700 rounded-2xl p-10 shadow-xl print:shadow-none"
+          className="bg-white border-4 border-double border-green-700 rounded-2xl p-10 shadow-xl print:shadow-none print:border-4 print:rounded-none"
         >
+          {/* ... certificate content remains the same ... */}
           {/* Header */}
           <div className="text-center space-y-2 border-b-2 border-green-700 pb-6 mb-6">
             <div className="flex items-center justify-center gap-3 mb-3">
@@ -101,7 +102,7 @@ const StreetCertificate = () => {
           </div>
 
           {/* Details grid */}
-          <div className="mt-8 grid grid-cols-2 gap-4 text-sm border border-green-200 rounded-xl p-4 bg-green-50">
+          <div className="mt-8 grid grid-cols-2 gap-4 text-sm border border-green-200 rounded-xl p-4 bg-green-50 print:bg-green-50">
             <CertDetail label="Certificate No." value={app.certificateNo!} mono />
             <CertDetail
               label="Registration Type"
@@ -121,7 +122,7 @@ const StreetCertificate = () => {
           </div>
 
           {/* Verification note */}
-          <div className="mt-6 flex items-start gap-3 bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800">
+          <div className="mt-6 flex items-start gap-3 bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800 print:bg-blue-50 print:border-blue-200">
             <Shield className="h-5 w-5 shrink-0 mt-0.5 text-blue-600" />
             <div>
               <p className="font-semibold">Verify this Certificate</p>
@@ -163,8 +164,8 @@ const StreetCertificate = () => {
           </div>
         </div>
 
-        {/* QR placeholder */}
-        <div className="bg-card rounded-xl border border-border p-4 flex items-center gap-4">
+        {/* QR placeholder - hidden when printing */}
+        <div className="bg-card rounded-xl border border-border p-4 flex items-center gap-4 print:hidden">
           <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center shrink-0">
             <MapPin className="h-6 w-6 text-muted-foreground" />
           </div>
@@ -183,6 +184,43 @@ const StreetCertificate = () => {
           </div>
         </div>
       </div>
+
+      {/* Add print styles */}
+      <style>{`
+        @media print {
+          body * {
+            visibility: hidden;
+          }
+          #certificate, #certificate * {
+            visibility: visible;
+          }
+          #certificate {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            margin: 0;
+            padding: 20px;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+          }
+          .print\\:shadow-none {
+            box-shadow: none !important;
+          }
+          .print\\:border-4 {
+            border-width: 4px !important;
+          }
+          .print\\:rounded-none {
+            border-radius: 0 !important;
+          }
+          .print\\:bg-green-50 {
+            background-color: #f0fdf4 !important;
+          }
+          .print\\:border-blue-200 {
+            border-color: #bfdbfe !important;
+          }
+        }
+      `}</style>
     </DashboardLayout>
   );
 };

@@ -24,6 +24,8 @@ const CertificateApplications = () => {
   const myEmail = user?.email;
 const getMyApps = () => getApplications().filter(a => a.citizenEmail === myEmail);
 
+console.log(myEmail,"lolp",getMyApps())
+
   const [apps, setApps] = useState<Application[]>(getMyApps);
   const [invoice, setInvoice] = useState<Application | null>(null);
   const [paying, setPaying] = useState(false);

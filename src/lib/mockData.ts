@@ -107,15 +107,17 @@ const STREET_SEED: StreetApplication[] = [
     gpsLat: "6.8103",
     gpsLng: "3.1970",
     submittedDate: "2026-03-08",
-    status: "Under Review",
+    status: "Certificate Issued",
     amount: 25000,
     paid: true,
     paymentRef: "PAY-STR-100245",
     paymentDate: "2026-03-08",
+    certificateNo: "LOG-STR-100",
+    certificateIssuedDate: "2026-03-08",
   },
   {
     id: "IFO-STR-244",
-    citizenEmail: "other@logmas.ng",
+    citizenEmail: "citizen@logmas.ng",
     applicantName: "Tunde Adeyemi",
     phone: "08087654321",
     email: "tunde@example.com",
@@ -249,13 +251,13 @@ export function saveStreetApplications(apps: StreetApplication[]) {
 }
 
 export function getStreetApplicationsByEmail(
-  email: string
+  email: string,
 ): StreetApplication[] {
   return getStreetApplications().filter((a) => a.citizenEmail === email);
 }
 
 export function addStreetApplication(
-  app: Omit<StreetApplication, "id" | "submittedDate" | "paymentRef">
+  app: Omit<StreetApplication, "id" | "submittedDate" | "paymentRef">,
 ): StreetApplication {
   const apps = getStreetApplications();
   const newId = `IFO-STR-${String(apps.length + 246).padStart(3, "0")}`;
@@ -275,7 +277,7 @@ export function updateStreetApplicationStatus(
   id: string,
   status: StreetAppStatus,
   note?: string,
-  field: "adminNote" | "inspectionNote" = "adminNote"
+  field: "adminNote" | "inspectionNote" = "adminNote",
 ) {
   const apps = getStreetApplications();
   const idx = apps.findIndex((a) => a.id === id);
@@ -285,7 +287,7 @@ export function updateStreetApplicationStatus(
 
   if (status === "Approved") {
     apps[idx].certificateNo = `LOGMAS/STR/${new Date().getFullYear()}/${String(
-      Math.floor(Math.random() * 900) + 100
+      Math.floor(Math.random() * 900) + 100,
     )}`;
     apps[idx].certificateIssuedDate = new Date().toISOString().split("T")[0];
     apps[idx].status = "Certificate Issued";
@@ -365,23 +367,24 @@ export interface Notification {
   type: "success" | "info" | "error";
 }
 
-const SEED: Application[] = [
+export const SEED: Application[] = [
   {
     id: "APP-001",
     applicantName: "Ngozi Eze",
-    citizenEmail: "other@logmas.ng",
+    citizenEmail: "citizen@logmas.ng",
     type: "State of Origin",
     ward: "Ward 3 - Ifo Central",
     community: "Agbado",
     submittedDate: "2025-06-12",
-    status: "Awaiting Ward Approval",
+    status: "Approved",
     amount: 5000,
     paid: true,
+    certificateNo: "LOG-TEST",
   },
   {
     id: "APP-002",
     applicantName: "Tunde Bakare",
-    citizenEmail: "other@logmas.ng",
+    citizenEmail: "citizen@logmas.ng",
     type: "Street Registration",
     ward: "Ward 5 - Ota Road",
     community: "Ota",
@@ -393,7 +396,7 @@ const SEED: Application[] = [
   {
     id: "APP-003",
     applicantName: "Amina Sule",
-    citizenEmail: "other@logmas.ng",
+    citizenEmail: "citizen@logmas.ng",
     type: "State of Origin",
     ward: "Ward 3 - Ifo Central",
     community: "Ifo Town",
@@ -445,7 +448,7 @@ export function updateApplicationStatus(
   id: string,
   status: Application["status"],
   note?: string,
-  field: "adminNote" | "wardNote" = "adminNote"
+  field: "adminNote" | "wardNote" = "adminNote",
 ) {
   const apps = getApplications();
   const idx = apps.findIndex((a) => a.id === id);
@@ -454,7 +457,7 @@ export function updateApplicationStatus(
   if (note) apps[idx][field] = note;
   if (status === "Ward Approved") {
     apps[idx].certificateNo = `LOGMAS/SOO/2025/${String(
-      Math.floor(Math.random() * 900) + 100
+      Math.floor(Math.random() * 900) + 100,
     )}`;
     if (apps[idx].citizenEmail) {
       addNotification({
@@ -533,8 +536,6 @@ export function updateApplicationStatus(
 //   localStorage.removeItem("logmas_street_applications");
 // }
 
-
-
 export interface VerificationResult {
   found: boolean;
   type: "standard" | "street" | null;
@@ -548,7 +549,7 @@ export function verifyAnyCertificate(certNo: string): VerificationResult {
   // 1. Check Standard Applications
   const standardApps = getApplications();
   const foundStandard = standardApps.find(
-    (a) => a.certificateNo?.toUpperCase() === normalizedCertNo
+    (a) => a.certificateNo?.toUpperCase() === normalizedCertNo,
   );
   if (foundStandard) {
     return { found: true, type: "standard", data: foundStandard };
@@ -557,7 +558,7 @@ export function verifyAnyCertificate(certNo: string): VerificationResult {
   // 2. Check Street Applications
   const streetApps = getStreetApplications();
   const foundStreet = streetApps.find(
-    (a) => a.certificateNo?.toUpperCase() === normalizedCertNo
+    (a) => a.certificateNo?.toUpperCase() === normalizedCertNo,
   );
   if (foundStreet) {
     return { found: true, type: "street", data: foundStreet };
@@ -572,7 +573,12 @@ import { v4 as uuidv4 } from "uuid";
 // ─── Revenue & Service Engine (Core Data Model) ──────────────────────────────
 
 export type RevenuePricingType = "fixed" | "variable" | "tiered" | "dynamic";
-export type RenewalFrequency = "monthly" | "quarterly" | "semi-annual" | "annual" | "biennial";
+export type RenewalFrequency =
+  | "monthly"
+  | "quarterly"
+  | "semi-annual"
+  | "annual"
+  | "biennial";
 export type RevenueCategory =
   | "property"
   | "street"
@@ -990,7 +996,9 @@ export function saveRevenues(revenues: Revenue[]) {
   localStorage.setItem("logmas_revenues", JSON.stringify(revenues));
 }
 
-export function addRevenue(revenue: Omit<Revenue, "id" | "createdAt" | "updatedAt">): Revenue {
+export function addRevenue(
+  revenue: Omit<Revenue, "id" | "createdAt" | "updatedAt">,
+): Revenue {
   const revenues = getRevenues();
   const newRevenue: Revenue = {
     ...revenue,
@@ -1003,7 +1011,10 @@ export function addRevenue(revenue: Omit<Revenue, "id" | "createdAt" | "updatedA
   return newRevenue;
 }
 
-export function updateRevenue(id: string, updates: Partial<Revenue>): Revenue | null {
+export function updateRevenue(
+  id: string,
+  updates: Partial<Revenue>,
+): Revenue | null {
   const revenues = getRevenues();
   const idx = revenues.findIndex((r) => r.id === id);
   if (idx === -1) return null;
@@ -1033,11 +1044,15 @@ export function getRevenueById(id: string): Revenue | null {
 }
 
 export function getRevenuesByCategory(category: RevenueCategory): Revenue[] {
-  return getRevenues().filter((r) => r.category === category && r.status === "active");
+  return getRevenues().filter(
+    (r) => r.category === category && r.status === "active",
+  );
 }
 
 export function getRevenuesByDepartment(department: string): Revenue[] {
-  return getRevenues().filter((r) => r.department === department && r.status === "active");
+  return getRevenues().filter(
+    (r) => r.department === department && r.status === "active",
+  );
 }
 
 export function getAllActiveRevenues(): Revenue[] {
@@ -1060,7 +1075,7 @@ export function saveRevenueApplications(apps: RevenueApplication[]) {
 }
 
 export function addRevenueApplication(
-  app: Omit<RevenueApplication, "id" | "submittedDate">
+  app: Omit<RevenueApplication, "id" | "submittedDate">,
 ): RevenueApplication {
   const apps = getRevenueApplications();
   const newApp: RevenueApplication = {
@@ -1076,7 +1091,7 @@ export function addRevenueApplication(
 export function updateRevenueApplicationStatus(
   id: string,
   status: ApplicationStatus,
-  updates?: Partial<RevenueApplication>
+  updates?: Partial<RevenueApplication>,
 ): boolean {
   const apps = getRevenueApplications();
   const idx = apps.findIndex((a) => a.id === id);
@@ -1090,11 +1105,17 @@ export function updateRevenueApplicationStatus(
   return true;
 }
 
-export function getRevenueApplicationsByEmail(citizenEmail: string): RevenueApplication[] {
-  return getRevenueApplications().filter((a) => a.citizenEmail === citizenEmail);
+export function getRevenueApplicationsByEmail(
+  citizenEmail: string,
+): RevenueApplication[] {
+  return getRevenueApplications().filter(
+    (a) => a.citizenEmail === citizenEmail,
+  );
 }
 
-export function getRevenueApplicationsByRevenueId(revenueId: string): RevenueApplication[] {
+export function getRevenueApplicationsByRevenueId(
+  revenueId: string,
+): RevenueApplication[] {
   return getRevenueApplications().filter((a) => a.revenueId === revenueId);
 }
 
@@ -1107,7 +1128,9 @@ export function confirmRevenuePayment(id: string): boolean {
 
 export function getRenewalsDue(daysFromNow: number = 30): RevenueApplication[] {
   const now = new Date();
-  const futureDate = new Date(now.getTime() + daysFromNow * 24 * 60 * 60 * 1000);
+  const futureDate = new Date(
+    now.getTime() + daysFromNow * 24 * 60 * 60 * 1000,
+  );
   return getRevenueApplications().filter((app) => {
     if (!app.renewalDueDate) return false;
     const dueDate = new Date(app.renewalDueDate);
@@ -1138,7 +1161,10 @@ export function addDepartment(dept: Omit<Department, "id">): Department {
   return newDept;
 }
 
-export function updateDepartment(id: string, updates: Partial<Department>): boolean {
+export function updateDepartment(
+  id: string,
+  updates: Partial<Department>,
+): boolean {
   const depts = getDepartments();
   const idx = depts.findIndex((d) => d.id === id);
   if (idx === -1) return false;
@@ -1175,7 +1201,7 @@ export function getNotifications(citizenEmail: string): Notification[] {
 }
 
 export function addNotification(
-  n: Omit<Notification, "id" | "time" | "read">
+  n: Omit<Notification, "id" | "time" | "read">,
 ): Notification {
   try {
     const raw = localStorage.getItem("logmas_notifications");
