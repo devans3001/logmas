@@ -7,14 +7,14 @@ const HeroSection = () => {
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0">
-        <img src={heroBg} alt="Ifo Local Government" className="w-full h-full object-cover" />
+        <img src={heroBg} alt="logmas Government" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-hero" />
       </div>
       <div className="relative z-10 container mx-auto px-4 text-center pt-20">
         <div className="max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/20 text-primary-foreground text-sm font-medium mb-8 animate-fade-in">
             <Shield className="h-4 w-4" />
-            Ifo Local Government Digital Platform
+            logmas Government Digital Platform
           </div>
 
           <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-primary-foreground leading-tight mb-6 animate-fade-in" style={{ animationDelay: "100ms" }}>
@@ -26,7 +26,7 @@ const HeroSection = () => {
           </h1>
 
           <p className="text-lg sm:text-xl text-primary-foreground/80 mb-10 max-w-2xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: "200ms" }}>
-            Ifo Local Government Area — Apply for certificates, register streets, pay tenement rates, and manage all government services online.
+            logmas Government Area — Apply for certificates, register streets, pay tenement rates, and manage all government services online.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in" style={{ animationDelay: "300ms" }}>

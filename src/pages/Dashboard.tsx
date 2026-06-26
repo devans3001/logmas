@@ -31,7 +31,7 @@ const Dashboard = () => {
       <div className="space-y-6">
         <div>
           <h2 className="font-display text-2xl font-bold text-foreground">Welcome back, John 👋</h2>
-          <p className="text-muted-foreground">Here's an overview of your activities on LOGMAS — Ifo LGA.</p>
+          <p className="text-muted-foreground">Here's an overview of your activities on LOGMAS — Logmas.</p>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">

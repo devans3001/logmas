@@ -49,7 +49,7 @@ const CompanyDemandNotice = () => {
         return (
           <div className="space-y-4">
             <h3 className="font-display font-semibold text-lg text-foreground">Business Category</h3>
-            <p className="text-sm text-muted-foreground">Select your business category. Fees are set by Ifo LGA administration.</p>
+            <p className="text-sm text-muted-foreground">Select your business category. Fees are set by Logmas administration.</p>
             <div className="grid sm:grid-cols-2 gap-3">
               {businessCategories.map((cat) => (
                 <div key={cat.name} onClick={() => update("category", cat.name)} className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${form.category === cat.name ? "border-primary bg-primary/5" : "border-border hover:border-primary/30"}`}>
@@ -67,7 +67,7 @@ const CompanyDemandNotice = () => {
             <div className="bg-muted/50 rounded-xl p-6 border border-border">
               <div className="text-center mb-4">
                 <Building2 className="h-8 w-8 text-primary mx-auto mb-2" />
-                <h4 className="font-display font-bold text-foreground">IFO LOCAL GOVERNMENT AREA</h4>
+                <h4 className="font-display font-bold text-foreground">logmas GOVERNMENT AREA</h4>
                 <p className="text-xs text-muted-foreground">DEMAND NOTICE</p>
               </div>
               <div className="space-y-3">

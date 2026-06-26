@@ -36,6 +36,9 @@ import AdminOfficers from "./pages/AdminOfficers";
 import AdminUsers from "./pages/AdminUsers";
 import AdminSettings from "./pages/AdminSettings";
 import NotFound from "./pages/NotFound";
+import WardDashboard from "./pages/WardDashboard";
+import WardApplications from "./pages/WardApplications";
+import StreetCertificate from "./pages/Streetcertificate";
 
 const queryClient = new QueryClient();
 
@@ -56,21 +59,37 @@ const App = () => (
           {/* Citizen Dashboard */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/apply" element={<ApplyCertificate />} />
-          <Route path="/dashboard/applications" element={<CertificateApplications />} />
-          <Route path="/dashboard/certificates" element={<ApprovedCertificates />} />
-          <Route path="/dashboard/street-registration" element={<StreetRegistration />} />
+          <Route
+            path="/dashboard/applications"
+            element={<CertificateApplications />}
+          />
+          <Route
+            path="/dashboard/certificates"
+            element={<ApprovedCertificates />}
+          />
+          <Route
+            path="/dashboard/street-registration"
+            element={<StreetRegistration />}
+          />
           <Route path="/dashboard/tenement-rate" element={<TenementRate />} />
-          <Route path="/dashboard/demand-notice" element={<CompanyDemandNotice />} />
+          <Route
+            path="/dashboard/demand-notice"
+            element={<CompanyDemandNotice />}
+          />
           <Route path="/dashboard/shop-levy" element={<ShopLevy />} />
           <Route path="/dashboard/payments" element={<PaymentHistory />} />
           <Route path="/dashboard/notifications" element={<Notifications />} />
           <Route path="/dashboard/tickets" element={<RaiseTicket />} />
           <Route path="/dashboard/settings" element={<ProfileSettings />} />
-          <Route path="/dashboard/downloads" element={<ApprovedCertificates />} />
+          <Route
+            path="/dashboard/downloads"
+            element={<ApprovedCertificates />}
+          />
 
           {/* Portals */}
           <Route path="/shop-portal" element={<ShopPortal />} />
           <Route path="/business-portal" element={<BusinessPortal />} />
+          <Route path="/dashboard/street-certificate/:id" element={<StreetCertificate />} />
 
           {/* Admin */}
           <Route path="/admin" element={<AdminDashboard />} />
@@ -86,6 +105,11 @@ const App = () => (
           <Route path="/admin/officers" element={<AdminOfficers />} />
           <Route path="/admin/users" element={<AdminUsers />} />
           <Route path="/admin/settings" element={<AdminSettings />} />
+
+          {/* Ward Officer */}
+          <Route path="/ward" element={<WardDashboard />} />
+          <Route path="/ward/applications" element={<WardApplications />} />
+          <Route path="/ward/approvals" element={<WardApplications />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

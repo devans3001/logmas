@@ -1,9 +1,26 @@
 import { ReactNode, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
-  LayoutDashboard, FileText, Award, Store, Building2, CreditCard, BarChart3, MessageSquare, Settings, LogOut, Menu, X, Users, Map, Home, Bell, Shield
+  LayoutDashboard,
+  FileText,
+  Award,
+  Store,
+  Building2,
+  CreditCard,
+  BarChart3,
+  MessageSquare,
+  Settings,
+  LogOut,
+  Menu,
+  X,
+  Users,
+  Map,
+  Home,
+  Bell,
+  Shield,
 } from "lucide-react";
 import emblem from "@/assets/logmas-emblem.png";
+import { logout } from "@/lib/auth";
 
 const adminNav = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/admin" },
@@ -24,21 +41,36 @@ const adminNav = [
 const AdminLayout = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <div className="min-h-screen flex bg-background">
       {sidebarOpen && (
-        <div className="fixed inset-0 bg-foreground/40 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        <div
+          className="fixed inset-0 bg-foreground/40 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
       )}
 
-      <aside className={`fixed lg:sticky top-0 left-0 z-50 h-screen w-64 bg-sidebar text-sidebar-foreground flex flex-col transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
+      <aside
+        className={`fixed lg:sticky top-0 left-0 z-50 h-screen w-64 bg-sidebar text-sidebar-foreground flex flex-col transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
+      >
         <div className="flex items-center gap-3 px-5 h-16 border-b border-sidebar-border">
           <img src={emblem} alt="LOGMAS" className="h-8 w-8 brightness-200" />
           <div>
             <span className="font-display font-bold text-base">LOGMAS</span>
-            <span className="block text-xs text-sidebar-foreground/60">Admin Portal</span>
+            <span className="block text-xs text-sidebar-foreground/60">
+              Admin Portal
+            </span>
           </div>
-          <button onClick={() => setSidebarOpen(false)} className="ml-auto lg:hidden text-sidebar-foreground/70">
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="ml-auto lg:hidden text-sidebar-foreground/70"
+          >
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -65,23 +97,36 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
         </nav>
 
         <div className="p-3 border-t border-sidebar-border">
-          <Link to="/" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors"
+          >
             <LogOut className="h-4 w-4" />
             Logout
-          </Link>
+          </button>
         </div>
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0">
         <header className="sticky top-0 z-30 h-16 bg-card/80 backdrop-blur-md border-b border-border flex items-center px-4 lg:px-6 gap-4">
-          <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-foreground">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="lg:hidden text-foreground"
+          >
             <Menu className="h-6 w-6" />
           </button>
-          <h1 className="font-display font-semibold text-lg text-foreground">Admin Portal</h1>
+          <h1 className="font-display font-semibold text-lg text-foreground">
+            Admin Portal
+          </h1>
           <div className="ml-auto flex items-center gap-3">
-            <Link to="/admin/tickets" className="relative text-muted-foreground hover:text-foreground">
+            <Link
+              to="/admin/tickets"
+              className="relative text-muted-foreground hover:text-foreground"
+            >
               <Bell className="h-5 w-5" />
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-destructive text-destructive-foreground rounded-full text-[10px] flex items-center justify-center font-bold">5</span>
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-destructive text-destructive-foreground rounded-full text-[10px] flex items-center justify-center font-bold">
+                5
+              </span>
             </Link>
           </div>
         </header>

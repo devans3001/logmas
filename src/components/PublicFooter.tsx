@@ -12,7 +12,7 @@ const PublicFooter = () => {
               <span className="font-display font-bold text-xl">LOGMAS</span>
             </div>
             <p className="text-primary-foreground/70 text-sm leading-relaxed">
-              Ifo Local Government Digital Platform. Bringing government services closer to the people of Ifo LGA, Ogun State.
+              logmas Government Digital Platform. Bringing government services closer to the people
             </p>
           </div>
           <div>
@@ -36,7 +36,7 @@ const PublicFooter = () => {
           <div>
             <h4 className="font-display font-semibold mb-4">Contact</h4>
             <ul className="space-y-2 text-sm text-primary-foreground/70">
-              <li>Ifo Local Government Secretariat</li>
+              <li>logmas Government Secretariat</li>
               <li>Ifo, Ogun State, Nigeria</li>
               <li>info@logmas.ifo.gov.ng</li>
               <li>+234 (0) 800 LOGMAS</li>
@@ -44,8 +44,8 @@ const PublicFooter = () => {
           </div>
         </div>
         <div className="border-t border-primary-foreground/20 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-primary-foreground/60">© 2026 LOGMAS — Ifo Local Government Area, Ogun State. All rights reserved.</p>
-          <p className="text-sm text-primary-foreground/60">Powered by Ifo LGA ICT Unit</p>
+          <p className="text-sm text-primary-foreground/60">© 2026 LOGMAS — logmas Government Area, Ogun State. All rights reserved.</p>
+          <p className="text-sm text-primary-foreground/60">Powered by Logmas ICT Unit</p>
         </div>
       </div>
     </footer>

@@ -29,7 +29,7 @@ const ProfileSettings = () => {
             </div>
             <div>
               <h3 className="font-display font-semibold text-foreground">{profile.fullName}</h3>
-              <p className="text-sm text-muted-foreground">Resident User · Ifo LGA</p>
+              <p className="text-sm text-muted-foreground">Resident User · Logmas</p>
               <Button variant="outline" size="sm" className="mt-2"><Camera className="h-4 w-4" /> Change Photo</Button>
             </div>
           </div>

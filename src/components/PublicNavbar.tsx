@@ -13,7 +13,7 @@ const PublicNavbar = () => {
           <img src={emblem} alt="LOGMAS" className="h-10 w-10 object-contain" />
           <div>
             <span className="font-display font-bold text-lg text-foreground">LOGMAS</span>
-            <span className="hidden sm:block text-xs text-muted-foreground leading-none">Ifo Local Government Digital Platform</span>
+            <span className="hidden sm:block text-xs text-muted-foreground leading-none">logmas Government Digital Platform</span>
           </div>
         </Link>
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">

@@ -29,7 +29,7 @@ const AdminReports = () => {
       <div className="space-y-6">
         <div>
           <h2 className="font-display text-2xl font-bold text-foreground">Reports & Analytics</h2>
-          <p className="text-muted-foreground">Revenue and application analytics for Ifo LGA.</p>
+          <p className="text-muted-foreground">Revenue and application analytics for Logmas.</p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
