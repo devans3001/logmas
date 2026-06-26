@@ -39,8 +39,12 @@ import NotFound from "./pages/NotFound";
 import WardDashboard from "./pages/WardDashboard";
 import WardApplications from "./pages/WardApplications";
 import StreetCertificate from "./pages/Streetcertificate";
+import RevenuePortal from "./pages/Revenueportal";
+import AdminRevenueDashboard from "./pages/Adminrevenuedashboard";
+import AdminRevenueSettings from "./pages/AdminRevenueSettings";
 
 const queryClient = new QueryClient();
+
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -49,49 +53,37 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          {/* Public */}
+          {/* ─── Public Routes ─────────────────────────────────────────── */}
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/verify" element={<VerifyCertificate />} />
-
-          {/* Citizen Dashboard */}
+ 
+          {/* ─── Citizen Dashboard Routes ────────────────────────────── */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/apply" element={<ApplyCertificate />} />
-          <Route
-            path="/dashboard/applications"
-            element={<CertificateApplications />}
-          />
-          <Route
-            path="/dashboard/certificates"
-            element={<ApprovedCertificates />}
-          />
-          <Route
-            path="/dashboard/street-registration"
-            element={<StreetRegistration />}
-          />
+          <Route path="/dashboard/applications" element={<CertificateApplications />} />
+          <Route path="/dashboard/certificates" element={<ApprovedCertificates />} />
+          <Route path="/dashboard/street-registration" element={<StreetRegistration />} />
+          <Route path="/dashboard/street-certificate/:id" element={<StreetCertificate />} />
           <Route path="/dashboard/tenement-rate" element={<TenementRate />} />
-          <Route
-            path="/dashboard/demand-notice"
-            element={<CompanyDemandNotice />}
-          />
+          <Route path="/dashboard/demand-notice" element={<CompanyDemandNotice />} />
           <Route path="/dashboard/shop-levy" element={<ShopLevy />} />
           <Route path="/dashboard/payments" element={<PaymentHistory />} />
           <Route path="/dashboard/notifications" element={<Notifications />} />
           <Route path="/dashboard/tickets" element={<RaiseTicket />} />
           <Route path="/dashboard/settings" element={<ProfileSettings />} />
-          <Route
-            path="/dashboard/downloads"
-            element={<ApprovedCertificates />}
-          />
-
-          {/* Portals */}
+          <Route path="/dashboard/downloads" element={<ApprovedCertificates />} />
+ 
+          {/* ─── Revenue Engine - Citizen Routes ──────────────────────── */}
+          <Route path="/dashboard/revenue" element={<RevenuePortal />} />
+ 
+          {/* ─── Portal Routes ────────────────────────────────────────── */}
           <Route path="/shop-portal" element={<ShopPortal />} />
           <Route path="/business-portal" element={<BusinessPortal />} />
-          <Route path="/dashboard/street-certificate/:id" element={<StreetCertificate />} />
-
-          {/* Admin */}
+ 
+          {/* ─── Admin Routes ─────────────────────────────────────────── */}
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/applications" element={<AdminApplications />} />
           <Route path="/admin/certificates" element={<AdminCertificates />} />
@@ -105,17 +97,103 @@ const App = () => (
           <Route path="/admin/officers" element={<AdminOfficers />} />
           <Route path="/admin/users" element={<AdminUsers />} />
           <Route path="/admin/settings" element={<AdminSettings />} />
-
-          {/* Ward Officer */}
+ 
+          {/* ─── Revenue Engine - Admin Routes ────────────────────────── */}
+          <Route path="/admin/revenue/dashboard" element={<AdminRevenueDashboard />} />
+          <Route path="/admin/revenue/settings" element={<AdminRevenueSettings />} />
+ 
+          {/* Revenue Subcategory Routes (Placeholders) */}
+          <Route
+            path="/admin/revenue/catalogue"
+            element={
+              <AdminRevenueDashboard />
+            }
+          />
+          <Route
+            path="/admin/revenue/citizen-apps"
+            element={
+              <AdminApplications />
+            }
+          />
+          <Route
+            path="/admin/revenue/business-apps"
+            element={
+              <AdminApplications />
+            }
+          />
+          <Route
+            path="/admin/revenue/market"
+            element={<div className="p-8"><h1>Market Revenue (Coming Soon)</h1></div>}
+          />
+          <Route
+            path="/admin/revenue/property-street"
+            element={<AdminStreets />}
+          />
+          <Route
+            path="/admin/revenue/environmental"
+            element={<div className="p-8"><h1>Environmental Revenue (Coming Soon)</h1></div>}
+          />
+          <Route
+            path="/admin/revenue/transport"
+            element={<div className="p-8"><h1>Transport Revenue (Coming Soon)</h1></div>}
+          />
+          <Route
+            path="/admin/revenue/advertisement"
+            element={<div className="p-8"><h1>Advertisement Revenue (Coming Soon)</h1></div>}
+          />
+          <Route
+            path="/admin/revenue/agriculture"
+            element={<div className="p-8"><h1>Agriculture & Abattoir Revenue (Coming Soon)</h1></div>}
+          />
+          <Route
+            path="/admin/revenue/health"
+            element={<div className="p-8"><h1>Health & Food Permits (Coming Soon)</h1></div>}
+          />
+          <Route
+            path="/admin/revenue/events"
+            element={<div className="p-8"><h1>Events & Entertainment Permits (Coming Soon)</h1></div>}
+          />
+          <Route
+            path="/admin/revenue/assets"
+            element={<div className="p-8"><h1>Government Assets & Rentals (Coming Soon)</h1></div>}
+          />
+          <Route
+            path="/admin/revenue/penalties"
+            element={<div className="p-8"><h1>Fines & Penalties (Coming Soon)</h1></div>}
+          />
+          <Route
+            path="/admin/revenue/invoices"
+            element={<AdminPayments />}
+          />
+          <Route
+            path="/admin/revenue/receipts"
+            element={<AdminPayments />}
+          />
+          <Route
+            path="/admin/revenue/renewals"
+            element={<div className="p-8"><h1>Renewal Management (Coming Soon)</h1></div>}
+          />
+          <Route
+            path="/admin/revenue/field-collection"
+            element={<div className="p-8"><h1>Field Officer Collection (Coming Soon)</h1></div>}
+          />
+          <Route
+            path="/admin/revenue/reports"
+            element={<AdminReports />}
+          />
+ 
+          {/* ─── Ward Officer Routes ────────────────────────────────── */}
           <Route path="/ward" element={<WardDashboard />} />
           <Route path="/ward/applications" element={<WardApplications />} />
           <Route path="/ward/approvals" element={<WardApplications />} />
-
+ 
+          {/* ─── Catch All / 404 ────────────────────────────────────── */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );
+
 
 export default App;

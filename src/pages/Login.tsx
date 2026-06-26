@@ -83,12 +83,12 @@ const Login = () => {
           </div>
 
           {/* Demo hint - optional, can be removed or kept */}
-          <div className="mb-6 p-3 rounded-lg bg-muted text-xs text-muted-foreground space-y-1">
+          {/* <div className="mb-6 p-3 rounded-lg bg-muted text-xs text-muted-foreground space-y-1">
             <p className="font-semibold text-foreground">Demo Credentials</p>
             <p>🏠 Citizen: citizen@logmas.ng / citizen123</p>
             <p>🛡️ LGA Admin: admin@logmas.ng / admin123</p>
             <p>🏛️ Ward Officer: ward@logmas.ng / ward123</p>
-          </div>
+          </div> */}
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>

@@ -490,50 +490,50 @@ export function updateApplicationStatus(
 
 // ─── Notifications ────────────────────────────────────────────────────────────
 
-export function getNotifications(citizenEmail: string): Notification[] {
-  try {
-    const raw = localStorage.getItem("logmas_notifications");
-    const all: Notification[] = raw ? JSON.parse(raw) : [];
-    return all.filter((n) => n.citizenEmail === citizenEmail);
-  } catch {
-    return [];
-  }
-}
+// export function getNotifications(citizenEmail: string): Notification[] {
+//   try {
+//     const raw = localStorage.getItem("logmas_notifications");
+//     const all: Notification[] = raw ? JSON.parse(raw) : [];
+//     return all.filter((n) => n.citizenEmail === citizenEmail);
+//   } catch {
+//     return [];
+//   }
+// }
 
-export function addNotification(
-  n: Omit<Notification, "id" | "time" | "read">
-) {
-  try {
-    const raw = localStorage.getItem("logmas_notifications");
-    const all: Notification[] = raw ? JSON.parse(raw) : [];
-    all.unshift({
-      ...n,
-      id: `notif-${Date.now()}`,
-      time: "Just now",
-      read: false,
-    });
-    localStorage.setItem("logmas_notifications", JSON.stringify(all));
-  } catch {}
-}
+// export function addNotification(
+//   n: Omit<Notification, "id" | "time" | "read">
+// ) {
+//   try {
+//     const raw = localStorage.getItem("logmas_notifications");
+//     const all: Notification[] = raw ? JSON.parse(raw) : [];
+//     all.unshift({
+//       ...n,
+//       id: `notif-${Date.now()}`,
+//       time: "Just now",
+//       read: false,
+//     });
+//     localStorage.setItem("logmas_notifications", JSON.stringify(all));
+//   } catch {}
+// }
 
-export function markAllNotificationsRead(citizenEmail: string) {
-  try {
-    const raw = localStorage.getItem("logmas_notifications");
-    const all: Notification[] = raw ? JSON.parse(raw) : [];
-    all.forEach((n) => {
-      if (n.citizenEmail === citizenEmail) n.read = true;
-    });
-    localStorage.setItem("logmas_notifications", JSON.stringify(all));
-  } catch {}
-}
+// export function markAllNotificationsRead(citizenEmail: string) {
+//   try {
+//     const raw = localStorage.getItem("logmas_notifications");
+//     const all: Notification[] = raw ? JSON.parse(raw) : [];
+//     all.forEach((n) => {
+//       if (n.citizenEmail === citizenEmail) n.read = true;
+//     });
+//     localStorage.setItem("logmas_notifications", JSON.stringify(all));
+//   } catch {}
+// }
 
-export function resetData() {
-  localStorage.removeItem("logmas_applications");
-  localStorage.removeItem("logmas_notifications");
-  localStorage.removeItem("logmas_street_applications");
-}
+// export function resetData() {
+//   localStorage.removeItem("logmas_applications");
+//   localStorage.removeItem("logmas_notifications");
+//   localStorage.removeItem("logmas_street_applications");
+// }
 
-// import { getApplications, getStreetApplications, type Application, type StreetApplication } from "@/lib/mockData";
+
 
 export interface VerificationResult {
   found: boolean;
@@ -564,4 +564,652 @@ export function verifyAnyCertificate(certNo: string): VerificationResult {
   }
 
   return { found: false, type: null, data: null };
+}
+
+// src/lib/mockData.ts
+import { v4 as uuidv4 } from "uuid";
+
+// ─── Revenue & Service Engine (Core Data Model) ──────────────────────────────
+
+export type RevenuePricingType = "fixed" | "variable" | "tiered" | "dynamic";
+export type RenewalFrequency = "monthly" | "quarterly" | "semi-annual" | "annual" | "biennial";
+export type RevenueCategory =
+  | "property"
+  | "street"
+  | "business"
+  | "market"
+  | "environmental"
+  | "transport"
+  | "advertisement"
+  | "agriculture"
+  | "health"
+  | "event"
+  | "assets"
+  | "penalty"
+  | "other";
+
+export type RevenueStatus = "active" | "inactive" | "draft" | "archived";
+export type ApplicationStatus =
+  | "submitted"
+  | "pending_review"
+  | "awaiting_payment"
+  | "paid"
+  | "under_inspection"
+  | "awaiting_approval"
+  | "approved"
+  | "rejected"
+  | "correction_requested"
+  | "completed"
+  | "cancelled";
+
+export interface PenaltyRule {
+  id: string;
+  name: string;
+  description: string;
+  daysOverdue: number;
+  penaltyPercent: number;
+  maxPenalty?: number;
+  active: boolean;
+}
+
+export interface WaiverRule {
+  id: string;
+  name: string;
+  description: string;
+  discountPercent: number;
+  applicableGroups: string[]; // e.g., ["senior_citizen", "disabled", "low_income"]
+  maxWaiver?: number;
+  requiresApproval: boolean;
+  active: boolean;
+}
+
+export interface Revenue {
+  id: string;
+  name: string;
+  category: RevenueCategory;
+  revenueCode: string; // e.g., "PSR-2026-001"
+  description: string;
+  department: string; // e.g., "Planning & Revenue", "Health"
+  status: RevenueStatus;
+
+  // Pricing & Payment
+  price: number;
+  currency: string; // "NGN"
+  pricingType: RevenuePricingType;
+  priceNote?: string; // e.g., "per square meter", "per vehicle"
+
+  // Renewal
+  renewalRequired: boolean;
+  renewalFrequency?: RenewalFrequency;
+  renewalPrice?: number;
+  renewalDaysBeforeExpiry?: number; // Auto-notify X days before expiry
+
+  // Workflow
+  requiresApproval: boolean;
+  requiresInspection: boolean;
+  requiresDocuments: boolean;
+  requiresGPS: boolean;
+  requiresCitizenProfile: boolean; // Full citizen KYC
+  requiresBusinessProfile: boolean; // Business registration
+
+  // Rules & Compliance
+  penaltyRules: PenaltyRule[];
+  waiverRules: WaiverRule[];
+  revenueHead: string; // GL Account code
+  maxInstallments?: number;
+
+  // Metadata
+  icon?: string; // emoji or icon identifier
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string; // Admin user ID
+  notes?: string;
+}
+
+export interface RevenueApplication {
+  id: string;
+  revenueId: string;
+  citizenEmail: string;
+  applicantName: string;
+  phone: string;
+
+  // Application info
+  submittedDate: string;
+  status: ApplicationStatus;
+  amount: number;
+  paid: boolean;
+  paymentRef?: string;
+  paymentDate?: string;
+
+  // Conditional fields (filled based on Revenue config)
+  formData: Record<string, any>; // Flexible JSON for custom fields
+  documents: string[]; // File URLs or IDs
+  gpsLat?: string;
+  gpsLng?: string;
+  inspectionDate?: string;
+  inspectionNotes?: string;
+  approvalDate?: string;
+
+  // References
+  certificateNo?: string;
+  certificateIssuedDate?: string;
+  renewalDueDate?: string;
+  adminNote?: string;
+  wardNote?: string;
+}
+
+export interface Department {
+  id: string;
+  name: string;
+  code: string;
+  head: string;
+  email: string;
+  phone: string;
+  active: boolean;
+}
+
+// ─── Seed Data ────────────────────────────────────────────────────────────────
+
+const REVENUE_SEED: Revenue[] = [
+  {
+    id: uuidv4(),
+    name: "Street Registration",
+    category: "street",
+    revenueCode: "STR-2026-001",
+    description: "Official registration of residential streets",
+    department: "Planning & Urban Development",
+    status: "active",
+    price: 25000,
+    currency: "NGN",
+    pricingType: "fixed",
+    renewalRequired: true,
+    renewalFrequency: "annual",
+    renewalPrice: 10000,
+    renewalDaysBeforeExpiry: 30,
+    requiresApproval: true,
+    requiresInspection: true,
+    requiresDocuments: true,
+    requiresGPS: true,
+    requiresCitizenProfile: true,
+    requiresBusinessProfile: false,
+    penaltyRules: [
+      {
+        id: uuidv4(),
+        name: "30-Day Late Fee",
+        description: "5% penalty after 30 days",
+        daysOverdue: 30,
+        penaltyPercent: 5,
+        active: true,
+      },
+      {
+        id: uuidv4(),
+        name: "60-Day Late Fee",
+        description: "10% penalty after 60 days",
+        daysOverdue: 60,
+        penaltyPercent: 10,
+        maxPenalty: 5000,
+        active: true,
+      },
+    ],
+    waiverRules: [
+      {
+        id: uuidv4(),
+        name: "Senior Citizen Discount",
+        description: "20% discount for citizens aged 65+",
+        discountPercent: 20,
+        applicableGroups: ["senior_citizen"],
+        requiresApproval: true,
+        active: true,
+      },
+    ],
+    revenueHead: "1010-01-01",
+    maxInstallments: 3,
+    icon: "🛣️",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    createdBy: "admin@logmas.ng",
+    notes: "Street naming and officialization process",
+  },
+  {
+    id: uuidv4(),
+    name: "State of Origin Certificate",
+    category: "property",
+    revenueCode: "SOO-2026-001",
+    description: "Issuance of state of origin certificate",
+    department: "Civil Registry",
+    status: "active",
+    price: 5000,
+    currency: "NGN",
+    pricingType: "fixed",
+    renewalRequired: false,
+    requiresApproval: true,
+    requiresInspection: false,
+    requiresDocuments: true,
+    requiresGPS: false,
+    requiresCitizenProfile: true,
+    requiresBusinessProfile: false,
+    penaltyRules: [],
+    waiverRules: [],
+    revenueHead: "1010-02-01",
+    icon: "📜",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    createdBy: "admin@logmas.ng",
+  },
+  {
+    id: uuidv4(),
+    name: "Business Operating Permit",
+    category: "business",
+    revenueCode: "BUS-2026-001",
+    description: "Annual business operating license",
+    department: "Commerce & Industry",
+    status: "active",
+    price: 50000,
+    currency: "NGN",
+    pricingType: "tiered",
+    priceNote: "Based on business category and scale",
+    renewalRequired: true,
+    renewalFrequency: "annual",
+    renewalPrice: 50000,
+    renewalDaysBeforeExpiry: 30,
+    requiresApproval: true,
+    requiresInspection: true,
+    requiresDocuments: true,
+    requiresGPS: true,
+    requiresCitizenProfile: true,
+    requiresBusinessProfile: true,
+    penaltyRules: [
+      {
+        id: uuidv4(),
+        name: "Operating Without License",
+        description: "20% of annual fee per month of violation",
+        daysOverdue: 1,
+        penaltyPercent: 20,
+        maxPenalty: 100000,
+        active: true,
+      },
+    ],
+    waiverRules: [],
+    revenueHead: "1020-01-01",
+    maxInstallments: 2,
+    icon: "🏢",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    createdBy: "admin@logmas.ng",
+    notes: "Covers retail, services, manufacturing",
+  },
+  {
+    id: uuidv4(),
+    name: "Market Levy",
+    category: "market",
+    revenueCode: "MKT-2026-001",
+    description: "Daily or monthly market space fee",
+    department: "Commerce & Market Development",
+    status: "active",
+    price: 500,
+    currency: "NGN",
+    pricingType: "variable",
+    priceNote: "Per stall per day",
+    renewalRequired: false,
+    requiresApproval: false,
+    requiresInspection: false,
+    requiresDocuments: false,
+    requiresGPS: false,
+    requiresCitizenProfile: true,
+    requiresBusinessProfile: false,
+    penaltyRules: [],
+    waiverRules: [],
+    revenueHead: "1030-01-01",
+    icon: "🛒",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    createdBy: "admin@logmas.ng",
+  },
+  {
+    id: uuidv4(),
+    name: "Environmental Sanitation Fee",
+    category: "environmental",
+    revenueCode: "ENV-2026-001",
+    description: "Waste management and sanitation collection",
+    department: "Environment & Sanitation",
+    status: "active",
+    price: 2000,
+    currency: "NGN",
+    pricingType: "fixed",
+    renewalRequired: true,
+    renewalFrequency: "monthly",
+    renewalPrice: 2000,
+    renewalDaysBeforeExpiry: 5,
+    requiresApproval: false,
+    requiresInspection: false,
+    requiresDocuments: false,
+    requiresGPS: false,
+    requiresCitizenProfile: true,
+    requiresBusinessProfile: false,
+    penaltyRules: [
+      {
+        id: uuidv4(),
+        name: "Late Payment",
+        description: "10% penalty after 2 weeks",
+        daysOverdue: 14,
+        penaltyPercent: 10,
+        active: true,
+      },
+    ],
+    waiverRules: [],
+    revenueHead: "1040-01-01",
+    icon: "♻️",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    createdBy: "admin@logmas.ng",
+  },
+  {
+    id: uuidv4(),
+    name: "Transport & Vehicle Registration",
+    category: "transport",
+    revenueCode: "TRN-2026-001",
+    description: "Commercial vehicle registration and renewal",
+    department: "Transport & Logistics",
+    status: "active",
+    price: 15000,
+    currency: "NGN",
+    pricingType: "tiered",
+    priceNote: "Based on vehicle type and capacity",
+    renewalRequired: true,
+    renewalFrequency: "annual",
+    renewalPrice: 12000,
+    renewalDaysBeforeExpiry: 60,
+    requiresApproval: true,
+    requiresInspection: true,
+    requiresDocuments: true,
+    requiresGPS: true,
+    requiresCitizenProfile: true,
+    requiresBusinessProfile: true,
+    penaltyRules: [],
+    waiverRules: [],
+    revenueHead: "1050-01-01",
+    maxInstallments: 2,
+    icon: "🚐",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    createdBy: "admin@logmas.ng",
+  },
+];
+
+const DEPARTMENT_SEED: Department[] = [
+  {
+    id: uuidv4(),
+    name: "Planning & Urban Development",
+    code: "PUD",
+    head: "Engr. Adeleke Obi",
+    email: "pud@logmas.ng",
+    phone: "+2348012345678",
+    active: true,
+  },
+  {
+    id: uuidv4(),
+    name: "Civil Registry",
+    code: "CRG",
+    head: "Mrs. Folake Adeyemi",
+    email: "registry@logmas.ng",
+    phone: "+2348087654321",
+    active: true,
+  },
+  {
+    id: uuidv4(),
+    name: "Commerce & Industry",
+    code: "CCI",
+    head: "Mr. Tunde Okafor",
+    email: "commerce@logmas.ng",
+    phone: "+2349012345678",
+    active: true,
+  },
+  {
+    id: uuidv4(),
+    name: "Environment & Sanitation",
+    code: "EAS",
+    head: "Dr. Chike Nwosu",
+    email: "environment@logmas.ng",
+    phone: "+2349087654321",
+    active: true,
+  },
+];
+
+// ─── Revenue CRUD ─────────────────────────────────────────────────────────────
+
+export function getRevenues(): Revenue[] {
+  try {
+    const raw = localStorage.getItem("logmas_revenues");
+    return raw ? JSON.parse(raw) : REVENUE_SEED;
+  } catch {
+    return REVENUE_SEED;
+  }
+}
+
+export function saveRevenues(revenues: Revenue[]) {
+  localStorage.setItem("logmas_revenues", JSON.stringify(revenues));
+}
+
+export function addRevenue(revenue: Omit<Revenue, "id" | "createdAt" | "updatedAt">): Revenue {
+  const revenues = getRevenues();
+  const newRevenue: Revenue = {
+    ...revenue,
+    id: uuidv4(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+  revenues.unshift(newRevenue);
+  saveRevenues(revenues);
+  return newRevenue;
+}
+
+export function updateRevenue(id: string, updates: Partial<Revenue>): Revenue | null {
+  const revenues = getRevenues();
+  const idx = revenues.findIndex((r) => r.id === id);
+  if (idx === -1) return null;
+  revenues[idx] = {
+    ...revenues[idx],
+    ...updates,
+    id: revenues[idx].id, // Don't allow ID change
+    createdAt: revenues[idx].createdAt, // Don't allow createdAt change
+    updatedAt: new Date().toISOString(),
+  };
+  saveRevenues(revenues);
+  return revenues[idx];
+}
+
+export function deleteRevenue(id: string): boolean {
+  const revenues = getRevenues();
+  const idx = revenues.findIndex((r) => r.id === id);
+  if (idx === -1) return false;
+  revenues.splice(idx, 1);
+  saveRevenues(revenues);
+  return true;
+}
+
+export function getRevenueById(id: string): Revenue | null {
+  const revenues = getRevenues();
+  return revenues.find((r) => r.id === id) || null;
+}
+
+export function getRevenuesByCategory(category: RevenueCategory): Revenue[] {
+  return getRevenues().filter((r) => r.category === category && r.status === "active");
+}
+
+export function getRevenuesByDepartment(department: string): Revenue[] {
+  return getRevenues().filter((r) => r.department === department && r.status === "active");
+}
+
+export function getAllActiveRevenues(): Revenue[] {
+  return getRevenues().filter((r) => r.status === "active");
+}
+
+// ─── Revenue Application CRUD ─────────────────────────────────────────────────
+
+export function getRevenueApplications(): RevenueApplication[] {
+  try {
+    const raw = localStorage.getItem("logmas_revenue_applications");
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+export function saveRevenueApplications(apps: RevenueApplication[]) {
+  localStorage.setItem("logmas_revenue_applications", JSON.stringify(apps));
+}
+
+export function addRevenueApplication(
+  app: Omit<RevenueApplication, "id" | "submittedDate">
+): RevenueApplication {
+  const apps = getRevenueApplications();
+  const newApp: RevenueApplication = {
+    ...app,
+    id: `APP-REV-${String(apps.length + 1).padStart(4, "0")}`,
+    submittedDate: new Date().toISOString().split("T")[0],
+  };
+  apps.unshift(newApp);
+  saveRevenueApplications(apps);
+  return newApp;
+}
+
+export function updateRevenueApplicationStatus(
+  id: string,
+  status: ApplicationStatus,
+  updates?: Partial<RevenueApplication>
+): boolean {
+  const apps = getRevenueApplications();
+  const idx = apps.findIndex((a) => a.id === id);
+  if (idx === -1) return false;
+  apps[idx] = {
+    ...apps[idx],
+    ...updates,
+    status,
+  };
+  saveRevenueApplications(apps);
+  return true;
+}
+
+export function getRevenueApplicationsByEmail(citizenEmail: string): RevenueApplication[] {
+  return getRevenueApplications().filter((a) => a.citizenEmail === citizenEmail);
+}
+
+export function getRevenueApplicationsByRevenueId(revenueId: string): RevenueApplication[] {
+  return getRevenueApplications().filter((a) => a.revenueId === revenueId);
+}
+
+export function confirmRevenuePayment(id: string): boolean {
+  return updateRevenueApplicationStatus(id, "paid", {
+    paid: true,
+    paymentDate: new Date().toISOString().split("T")[0],
+  });
+}
+
+export function getRenewalsDue(daysFromNow: number = 30): RevenueApplication[] {
+  const now = new Date();
+  const futureDate = new Date(now.getTime() + daysFromNow * 24 * 60 * 60 * 1000);
+  return getRevenueApplications().filter((app) => {
+    if (!app.renewalDueDate) return false;
+    const dueDate = new Date(app.renewalDueDate);
+    return dueDate <= futureDate && dueDate >= now;
+  });
+}
+
+// ─── Department CRUD ──────────────────────────────────────────────────────────
+
+export function getDepartments(): Department[] {
+  try {
+    const raw = localStorage.getItem("logmas_departments");
+    return raw ? JSON.parse(raw) : DEPARTMENT_SEED;
+  } catch {
+    return DEPARTMENT_SEED;
+  }
+}
+
+export function saveDepartments(depts: Department[]) {
+  localStorage.setItem("logmas_departments", JSON.stringify(depts));
+}
+
+export function addDepartment(dept: Omit<Department, "id">): Department {
+  const depts = getDepartments();
+  const newDept: Department = { ...dept, id: uuidv4() };
+  depts.push(newDept);
+  saveDepartments(depts);
+  return newDept;
+}
+
+export function updateDepartment(id: string, updates: Partial<Department>): boolean {
+  const depts = getDepartments();
+  const idx = depts.findIndex((d) => d.id === id);
+  if (idx === -1) return false;
+  depts[idx] = { ...depts[idx], ...updates };
+  saveDepartments(depts);
+  return true;
+}
+
+export function getDepartmentById(id: string): Department | null {
+  return getDepartments().find((d) => d.id === id) || null;
+}
+
+// ─── Notifications (Updated) ──────────────────────────────────────────────────
+
+export interface Notification {
+  id: string;
+  citizenEmail: string;
+  title: string;
+  message: string;
+  time: string;
+  read: boolean;
+  type: "success" | "info" | "error" | "warning";
+  relatedAppId?: string;
+}
+
+export function getNotifications(citizenEmail: string): Notification[] {
+  try {
+    const raw = localStorage.getItem("logmas_notifications");
+    const all: Notification[] = raw ? JSON.parse(raw) : [];
+    return all.filter((n) => n.citizenEmail === citizenEmail);
+  } catch {
+    return [];
+  }
+}
+
+export function addNotification(
+  n: Omit<Notification, "id" | "time" | "read">
+): Notification {
+  try {
+    const raw = localStorage.getItem("logmas_notifications");
+    const all: Notification[] = raw ? JSON.parse(raw) : [];
+    const notif: Notification = {
+      ...n,
+      id: `notif-${Date.now()}`,
+      time: "Just now",
+      read: false,
+    };
+    all.unshift(notif);
+    localStorage.setItem("logmas_notifications", JSON.stringify(all));
+    return notif;
+  } catch {
+    return n as Notification;
+  }
+}
+
+export function markAllNotificationsRead(citizenEmail: string): void {
+  try {
+    const raw = localStorage.getItem("logmas_notifications");
+    const all: Notification[] = raw ? JSON.parse(raw) : [];
+    all.forEach((n) => {
+      if (n.citizenEmail === citizenEmail) n.read = true;
+    });
+    localStorage.setItem("logmas_notifications", JSON.stringify(all));
+  } catch {}
+}
+
+// ─── Data Reset ──────────────────────────────────────────────────────────────
+
+export function resetData() {
+  localStorage.removeItem("logmas_revenues");
+  localStorage.removeItem("logmas_revenue_applications");
+  localStorage.removeItem("logmas_departments");
+  localStorage.removeItem("logmas_notifications");
 }
